@@ -1,4 +1,4 @@
-package com.vamberto.School.config;
+package com.vamberto.School.configs;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
