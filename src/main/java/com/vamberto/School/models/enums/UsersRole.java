@@ -1,6 +1,6 @@
-package com.vamberto.School.model.enums;
+package com.vamberto.School.models.enums;
 
-public enum Role {
+public enum UsersRole {
 
     STUDENT, LIBRARIAN, DIRECTOR, SECRETARY, TEACHER,SUPERVISOR
 }
