@@ -1,0 +1,12 @@
+# Create an db
+
+
+docker run --name schooldb -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=school -p 5433:5432 -d --network school-network postgres:17.4
+
+#Create a PGadmin4
+
+docker run --name pgadmin-school -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin -p 15433:80 -d --network school-network dpage/pgadmin4
+
+# create network
+
+docker network create school-network
