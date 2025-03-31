@@ -37,5 +37,5 @@ A API estará disponível em: http://localhost:8080
 
 ```
 
-###📌 Contribuindo
+### 📌 Contribuindo
 Este projeto é pessoal e tem como objetivo o aprendizado. Contudo, se você deseja contribuir com melhorias ou sugestões, sinta-se à vontade para fazer um Fork, criar uma branch e enviar um Pull Request.
