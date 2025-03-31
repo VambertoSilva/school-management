@@ -1,6 +1,6 @@
-package com.vamberto.School.model;
+package com.vamberto.School.models;
 
-import com.vamberto.School.model.enums.LoanStatus;
+import com.vamberto.School.models.enums.LoanStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,17 +39,4 @@ public class Loan {
 
     @JoinColumn(nullable = false)
     private LoanStatus status;
-
-    @JoinColumn(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    @JoinColumn(nullable = false, updatable = false)
-    private LocalDateTime UpdatedAt;
-
-    @JoinColumn(updatable = false, nullable = false)
-    private UUID createdBy;
-
-    @JoinColumn(nullable = false, updatable = false)
-    private UUID updatedBy;
-
 }

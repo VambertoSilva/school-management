@@ -1,13 +1,11 @@
-package com.vamberto.School.model;
+package com.vamberto.School.models;
 
+import com.vamberto.School.models.enums.BookStatus;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -17,6 +15,8 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    private UUID userId;
 
     @Column(nullable = false, length = 255)
     private String title;
@@ -29,21 +29,8 @@ public class Book {
 
 
     @Column(name = "classification_id")
-    private Classification classificationId;
+    private UUID classificationId;
 
+    private BookStatus status;
 
-    @Column(name = "created_by")
-    private UUID createdBy;
-
-
-    @Column(name = "updated_by")
-    private UUID updatedBy;
-
-    @CreatedDate
-    private LocalDateTime  createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-
-    // Getters and Setters
 }

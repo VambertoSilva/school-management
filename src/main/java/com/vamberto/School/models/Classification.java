@@ -1,10 +1,13 @@
-package com.vamberto.School.model;
+package com.vamberto.School.models;
+
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.UUID;
 
 @Entity
+@Data
 public class Classification {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -12,7 +15,4 @@ public class Classification {
 
     @Column(nullable = false, length = 100, unique = true)
     private String name;
-
-    @Column(length = 255)
-    private String description;
 }

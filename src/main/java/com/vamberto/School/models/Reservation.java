@@ -1,7 +1,7 @@
-package com.vamberto.School.model;
+package com.vamberto.School.models;
 
 
-import com.vamberto.School.model.enums.ReservationStatus;
+import com.vamberto.School.models.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
