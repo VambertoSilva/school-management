@@ -1,4 +1,4 @@
-package com.vamberto.School.model.enums;
+package com.vamberto.School.models.enums;
 
 public enum LoanStatus {
     ACTIVE,         // Empréstimo ativo

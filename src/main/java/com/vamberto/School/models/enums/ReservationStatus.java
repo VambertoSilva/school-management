@@ -1,4 +1,4 @@
-package com.vamberto.School.model.enums;
+package com.vamberto.School.models.enums;
 
 public enum ReservationStatus {
     PENDING,     // Reserva criada, aguardando confirmação
