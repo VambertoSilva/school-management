@@ -30,6 +30,8 @@ public class Reservation {
     @JoinColumn(nullable = false, updatable = false)
     private LocalDateTime reservationDate;
 
+    private LocalDateTime reservationDueDate;
+
     @JoinColumn(nullable = false, updatable = false)
     private ReservationStatus reservationStatus;
 
