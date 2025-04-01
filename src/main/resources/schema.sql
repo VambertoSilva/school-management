@@ -14,7 +14,6 @@ CREATE TABLE classification (
 
 CREATE TABLE book (
     id UUID PRIMARY KEY NOT NULL,
-    user_id UUID REFERENCES users(id),
     title VARCHAR(255) NOT NULL,
     author VARCHAR(255),
     publish_date DATE,
@@ -27,6 +26,7 @@ CREATE TABLE reservation (
     user_id UUID REFERENCES users(id),
     book_id UUID REFERENCES book(id),
     reservation_date TIMESTAMP,
+    reservation_due_date TIMESTAMP,
     status VARCHAR(50)
 );
 
