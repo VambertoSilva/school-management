@@ -9,7 +9,7 @@ CREATE TABLE users (
 
 CREATE TABLE classification (
     id UUID PRIMARY KEY NOT NULL,
-    name VARCHAR(100) NOT NULL UNIQUE
+    name VARCHAR(40) NOT NULL UNIQUE
 );
 
 CREATE TABLE book (
