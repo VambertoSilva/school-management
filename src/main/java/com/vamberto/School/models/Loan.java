@@ -6,13 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "loan")
 @Data
-@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Loan {
 
@@ -32,7 +32,7 @@ public class Loan {
     @JoinColumn(nullable = false)
     private LocalDateTime dueDate;
 
-    private LocalDateTime returnDate;
+    private LocalDate returnDate;
 
     @Column(nullable = false)
     private double fineAmount;

@@ -1,5 +1,7 @@
 package com.vamberto.School.controllers;
 
+import com.vamberto.School.Exception.LoanNotFoundException;
+import com.vamberto.School.Exception.LoanRenewInvalidDate;
 import com.vamberto.School.dtos.LoanDTO;
 import com.vamberto.School.models.Loan;
 import com.vamberto.School.services.LoanService;
@@ -45,6 +47,18 @@ public class LoanController {
 
         return ResponseEntity.ok(listLoan);
 
+    }
+
+    @PutMapping("/renew/{id}")
+    public ResponseEntity<Void> renewingLoan(@PathVariable String id) {
+        try {
+            loanService.renewingLoan(id);
+
+            return ResponseEntity.ok().build();
+        }catch (LoanRenewInvalidDate | LoanNotFoundException e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
 }

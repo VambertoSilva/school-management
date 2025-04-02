@@ -2,16 +2,24 @@ package com.vamberto.School.services;
 
 import com.vamberto.School.Exception.BookNotFoundException;
 import com.vamberto.School.Exception.LoanNotFoundException;
+import com.vamberto.School.Exception.LoanRenewInvalidDate;
 import com.vamberto.School.dtos.LoanDTO;
+import com.vamberto.School.models.Config;
 import com.vamberto.School.models.Loan;
 import com.vamberto.School.models.enums.LoanStatus;
 import com.vamberto.School.repositories.BookRepository;
+import com.vamberto.School.repositories.ConfigRepository;
 import com.vamberto.School.repositories.LoanRepository;
 import com.vamberto.School.repositories.UsersRepository;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.sql.SQLOutput;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +28,13 @@ import java.util.UUID;
 @Service
 @RequestMapping
 @Data
+@RequiredArgsConstructor
 public class LoanService {
 
     private final LoanRepository loanRepository;
     private final BookRepository bookRepository;
     private final UsersRepository usersRepository;
+    private final ConfigRepository configRepository;
 
     public Loan createLoan(LoanDTO dto){
 
@@ -35,7 +45,8 @@ public class LoanService {
                 newLoan.setStatus(LoanStatus.ACTIVE);
                 newLoan.setUserId(dto.userId());
                 newLoan.setBookId(dto.bookId());
-                newLoan.setReturnDate(LocalDateTime.now().plusWeeks(1));
+                //newLoan.setReturnDate(LocalDate.now().plusDays(-1)); //  date for test loan fine
+                newLoan.setReturnDate(LocalDate.now().plusWeeks(1));
 
                 return loanRepository.save(newLoan);
             } else {
@@ -64,4 +75,46 @@ public class LoanService {
     public List<Loan> listLoan(){
         return  loanRepository.findAll();
     }
+
+    public void  renewingLoan(String id){
+
+        UUID uuidId = UUID.fromString(id);
+        Optional<Loan> loanOptional = loanRepository.findById(uuidId);
+
+        if(loanOptional.isPresent()){
+            Loan loan = loanOptional.get();
+
+            if(loan.getReturnDate().equals(LocalDate.now())){
+                loan.setReturnDate(LocalDate.now());
+            }else{
+                throw new LoanRenewInvalidDate("Invalid return date");
+            }
+        }else{
+            throw new LoanNotFoundException("Invalid id");
+        }
+    }
+
+
+
+
+    @Scheduled(cron = "00 00 00 * * *")
+    public void verifyFine(){;
+
+        List<Loan> list = loanRepository.findByReturnDate(LocalDate.now().plusDays(-1));
+        Optional<Config> fineConfigOptional = configRepository.findById("library_fine");
+
+        if(fineConfigOptional.isPresent()) {
+            double valueFine = Double.parseDouble(fineConfigOptional.get().getValor());
+
+
+            for (Loan item : list) {
+                item.setStatus(LoanStatus.OVERDUE);
+                item.setFineAmount(item.getFineAmount() + valueFine);;
+                loanRepository.save(item);
+            }
+        }
+
+
+    }
+
 }
