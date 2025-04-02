@@ -44,6 +44,11 @@ CREATE TABLE loan (
     status VARCHAR(50)
 );
 
+CREATE TABLE config (
+    id VARCHAR(100) PRIMARY KEY,
+    valor VARCHAR(100)  NOT NULL
+);
+
 
 --CREATE TABLE book_copy (
 --    id UUID PRIMARY KEY NOT NULL,
