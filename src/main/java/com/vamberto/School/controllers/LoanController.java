@@ -27,7 +27,7 @@ public class LoanController {
             Loan response = loanService.createLoan(DTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(Map.of("Erro: ", e.getMessage()));
+           return ResponseEntity.badRequest().body(Map.of("Erro: ", e.getMessage()));
         }
 
     }

@@ -4,6 +4,7 @@ import com.vamberto.School.Exception.BookNotFoundException;
 import com.vamberto.School.Exception.LoanNotFoundException;
 import com.vamberto.School.Exception.LoanRenewInvalidDate;
 import com.vamberto.School.dtos.LoanDTO;
+import com.vamberto.School.models.Book;
 import com.vamberto.School.models.Config;
 import com.vamberto.School.models.Loan;
 import com.vamberto.School.models.enums.LoanStatus;
@@ -11,6 +12,7 @@ import com.vamberto.School.repositories.BookRepository;
 import com.vamberto.School.repositories.ConfigRepository;
 import com.vamberto.School.repositories.LoanRepository;
 import com.vamberto.School.repositories.UsersRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Local;
@@ -37,9 +39,21 @@ public class LoanService {
     private final ConfigRepository configRepository;
 
     public Loan createLoan(LoanDTO dto){
+        Optional<Config> quantityBooks = configRepository.findById("quantity_books");
+        int valueConfig  = Integer.parseInt( quantityBooks.get().getValor());
+        int valueUSer = loanRepository.countActiveOrOverdueLoans(dto.userId());
 
 
             if (bookRepository.existsById(dto.bookId()) && usersRepository.existsById(dto.userId())) {
+
+                System.out.println("Numero de livros emprestados: " + valueUSer + "/" + valueConfig);
+
+                if(valueConfig <= valueUSer  ){
+                    throw new IllegalStateException("Limite maximo de livros emprestados atinjido");
+                }
+
+
+
                 Loan newLoan = new Loan();
                 newLoan.setLoanDate(LocalDateTime.now());
                 newLoan.setStatus(LoanStatus.ACTIVE);
