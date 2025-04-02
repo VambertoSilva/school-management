@@ -7,6 +7,9 @@ import com.vamberto.School.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UsersService {
@@ -18,5 +21,18 @@ public class UsersService {
         usersRepository.save(user);
 
         return UsersMapper.toDTO(user);
+    }
+
+    public List<UsersDTO> list() {
+        return usersRepository
+                .findAll()
+                .stream()
+                .map(user -> new UsersDTO(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getName(),
+                        user.getUsersRole()))
+                .collect(Collectors.toList());
     }
 }
