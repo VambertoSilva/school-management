@@ -25,7 +25,7 @@ public class BookController {
 
     }
 
-    @PatchMapping("{id}")
+    @PutMapping("{id}")
         public ResponseEntity<Book> update(@RequestBody Book body, @PathVariable String id){
         Book response = bookService.updateBook(id, body);
 
