@@ -50,7 +50,7 @@ public class LoanService {
             int valueUSer = loanRepository.countActiveOrOverdueLoans(dto.userId());
             Book book = optionalBook.get();
 
-            if(book.getStatus() == BookStatus.RESERVED){
+            if(book.getStatus() == BookStatus.CHECKED_OUT){
                 throw new IllegalStateException("Livro ja emprestado");
             }
 
