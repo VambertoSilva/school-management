@@ -7,6 +7,7 @@ import com.vamberto.School.dtos.LoanDTO;
 import com.vamberto.School.models.Book;
 import com.vamberto.School.models.Config;
 import com.vamberto.School.models.Loan;
+import com.vamberto.School.models.enums.BookStatus;
 import com.vamberto.School.models.enums.LoanStatus;
 import com.vamberto.School.repositories.BookRepository;
 import com.vamberto.School.repositories.ConfigRepository;
@@ -40,32 +41,42 @@ public class LoanService {
 
     public Loan createLoan(LoanDTO dto){
         Optional<Config> quantityBooks = configRepository.findById("quantity_books");
+        Optional<Book> optionalBook = bookRepository.findById(dto.bookId());
         int valueConfig  = Integer.parseInt( quantityBooks.get().getValor());
-        int valueUSer = loanRepository.countActiveOrOverdueLoans(dto.userId());
-
-
-            if (bookRepository.existsById(dto.bookId()) && usersRepository.existsById(dto.userId())) {
-
-                System.out.println("Numero de livros emprestados: " + valueUSer + "/" + valueConfig);
-
-                if(valueConfig <= valueUSer  ){
-                    throw new IllegalStateException("Limite maximo de livros emprestados atinjido");
-                }
 
 
 
-                Loan newLoan = new Loan();
-                newLoan.setLoanDate(LocalDateTime.now());
-                newLoan.setStatus(LoanStatus.ACTIVE);
-                newLoan.setUserId(dto.userId());
-                newLoan.setBookId(dto.bookId());
-                //newLoan.setReturnDate(LocalDate.now().plusDays(-1)); //  date for test loan fine
-                newLoan.setReturnDate(LocalDate.now().plusWeeks(1));
+        if (optionalBook.isPresent() && usersRepository.existsById(dto.userId())) {
+            int valueUSer = loanRepository.countActiveOrOverdueLoans(dto.userId());
+            Book book = optionalBook.get();
 
-                return loanRepository.save(newLoan);
-            } else {
-                throw new RuntimeException("Erro ao verificar os dados");
+            if(book.getStatus() == BookStatus.RESERVED){
+                throw new IllegalStateException("Livro ja emprestado");
             }
+
+            if(valueConfig <= valueUSer  ){
+                throw new IllegalStateException("Limite maximo de livros emprestados atinjido");
+            }
+
+            System.out.println("Numero de livros emprestados: " + valueUSer + "/" + valueConfig);
+
+
+            Loan newLoan = new Loan();
+            newLoan.setLoanDate(LocalDateTime.now());
+            newLoan.setStatus(LoanStatus.ACTIVE);
+            newLoan.setUserId(dto.userId());
+            newLoan.setBookId(dto.bookId());
+            //newLoan.setReturnDate(LocalDate.now().plusDays(-1)); //  date for test loan fine
+            newLoan.setReturnDate(LocalDate.now().plusWeeks(1));
+
+
+
+            book.setStatus(BookStatus.CHECKED_OUT);
+            bookRepository.save(book);
+            return loanRepository.save(newLoan);
+        } else {
+            throw new RuntimeException("Erro ao verificar os dados");
+        }
 
 
     }
