@@ -4,6 +4,10 @@ import com.vamberto.School.models.Book;
 import com.vamberto.School.repositories.BookRepository;
 import com.vamberto.School.repositories.ClassificationRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,9 +54,25 @@ public class BookService {
     }
 
 
-    public List<Book> listBook(){
-        return bookRepository.findAll();
+    public Page<Book> listBook(Pageable pageable){
+
+
+
+        return bookRepository.findAll(pageable);
     }
+
+    public Page<Book> searchBooks(String title, int page, int size, String sortBy, String direction) {
+        Sort.Direction sortDirection;
+        try {
+            sortDirection = Sort.Direction.fromString(direction);
+        } catch (IllegalArgumentException e) {
+            sortDirection = Sort.Direction.ASC; // Se houver erro, ordena ascendente
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
+        return bookRepository.findByTitleContainingIgnoreCase(title, pageable);
+    }
+
 
     public void delete(String id){
         bookRepository.deleteById(UUID.fromString(id));

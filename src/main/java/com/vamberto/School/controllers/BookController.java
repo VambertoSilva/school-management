@@ -3,6 +3,8 @@ package com.vamberto.School.controllers;
 import com.vamberto.School.models.Book;
 import com.vamberto.School.services.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +35,23 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity <List<Book>> bookList(){
-        List<Book> list = bookService.listBook();
+    public ResponseEntity <Page<Book>> bookList(Pageable pageable){
+        Page<Book> list = bookService.listBook(pageable);
 
         return  ResponseEntity.ok(list);
     }
+
+    @GetMapping("/search")
+    public Page<Book> searchBooks(
+            @RequestParam String title,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "title") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return bookService.searchBooks(title, page, size, sortBy, direction);
+    }
+
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable String id){
