@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "book_copy")
+@Table(name = "reservation")
 @Data
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -32,18 +32,7 @@ public class Reservation {
 
     private LocalDateTime reservationDueDate;
 
-    @JoinColumn(nullable = false, updatable = false)
-    private ReservationStatus reservationStatus;
-
-    @JoinColumn(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    @JoinColumn(nullable = false, updatable = false)
-    private LocalDateTime UpdatedAt;
-
-    @JoinColumn(updatable = false, nullable = false)
-    private UUID createdBy;
-
-    @JoinColumn(nullable = false, updatable = false)
-    private UUID updatedBy;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReservationStatus status;
 }

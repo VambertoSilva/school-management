@@ -38,6 +38,7 @@ public class LoanService {
     private final BookRepository bookRepository;
     private final UsersRepository usersRepository;
     private final ConfigRepository configRepository;
+    private final ReservationService reservationService;
 
     public Loan createLoan(LoanDTO dto){
         Optional<Config> quantityBooks = configRepository.findById("quantity_books");
@@ -87,7 +88,18 @@ public class LoanService {
 
         if(loanOptional.isPresent()){
             Loan loan = loanOptional.get();
+
+            Optional<Book> bookOptional = bookRepository.findById(loan.getBookId());
+
+             if(bookOptional.isPresent()){
+                 Book book =  bookOptional.get();
+                 book.setStatus(BookStatus.AVAILABLE);
+                 bookRepository.save(book);
+             }
+
+
             loan.setStatus(LoanStatus.RETURNED);
+             reservationService.reservation(loan.getBookId());
             return loanRepository.save(loan);
 
         }else{
