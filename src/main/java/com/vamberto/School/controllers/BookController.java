@@ -1,6 +1,7 @@
 package com.vamberto.School.controllers;
 
 import com.vamberto.School.models.Book;
+import com.vamberto.School.models.enums.BookStatus;
 import com.vamberto.School.services.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,9 +48,10 @@ public class BookController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "title") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction
+            @RequestParam(defaultValue = "asc") String direction,
+            @RequestParam(defaultValue = "AVAILABLE") BookStatus filter
     ) {
-        return bookService.searchBooks(title, page, size, sortBy, direction);
+        return bookService.searchBooks(title, page, size, sortBy, direction, filter);
     }
 
 
