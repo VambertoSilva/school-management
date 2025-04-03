@@ -1,8 +1,10 @@
 package com.vamberto.School.services;
 
 import com.vamberto.School.models.Book;
+import com.vamberto.School.models.enums.BookStatus;
 import com.vamberto.School.repositories.BookRepository;
 import com.vamberto.School.repositories.ClassificationRepository;
+import com.vamberto.School.services.Filter.FilterPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -61,7 +63,7 @@ public class BookService {
         return bookRepository.findAll(pageable);
     }
 
-    public Page<Book> searchBooks(String title, int page, int size, String sortBy, String direction) {
+    public Page<Book> searchBooks(String title, int page, int size, String sortBy, String direction, BookStatus filter) {
         Sort.Direction sortDirection;
         try {
             sortDirection = Sort.Direction.fromString(direction);
@@ -70,7 +72,15 @@ public class BookService {
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
-        return bookRepository.findByTitleContainingIgnoreCase(title, pageable);
+        Page<Book> pageBook = bookRepository.findByTitleContainingIgnoreCase(title, pageable);
+
+        Page<Book> pageFilterBook = FilterPage.filter(pageBook, book -> book.getStatus().equals(filter), pageable);
+
+        System.out.println("Filter: " + filter);
+
+
+         return pageFilterBook;
+
     }
 
 
