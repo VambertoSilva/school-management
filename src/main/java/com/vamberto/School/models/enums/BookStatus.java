@@ -5,5 +5,6 @@ public enum BookStatus {
     RESERVED,   // Reservado por alguém
     LOST,       // Perdido
     CHECKED_OUT,// Emprestado
-    DAMAGED     // Danificado
+    DAMAGED,     // Danificado
+    ALL
 }

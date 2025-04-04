@@ -25,6 +25,7 @@ public class BookService {
 
     public Book createBook(Book book){
 
+        book.setStatus(BookStatus.AVAILABLE);
         return bookRepository.save(book);
 
     }
@@ -68,21 +69,24 @@ public class BookService {
         try {
             sortDirection = Sort.Direction.fromString(direction);
         } catch (IllegalArgumentException e) {
-            sortDirection = Sort.Direction.ASC; // Se houver erro, ordena ascendente
+            sortDirection = Sort.Direction.ASC;
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
+
+        // Se eu não enviar um titulo e enviar no filtro "ALL", enviar todos os dados
+        if(filter == BookStatus.ALL && title.isEmpty() ){
+            return  bookRepository.findAll(pageable);
+        }
+
+
         Page<Book> pageBook = bookRepository.findByTitleContainingIgnoreCase(title, pageable);
 
         Page<Book> pageFilterBook = FilterPage.filter(pageBook, book -> book.getStatus().equals(filter), pageable);
 
-        System.out.println("Filter: " + filter);
-
-
          return pageFilterBook;
 
     }
-
 
     public void delete(String id){
         bookRepository.deleteById(UUID.fromString(id));

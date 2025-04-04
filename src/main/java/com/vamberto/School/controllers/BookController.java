@@ -44,7 +44,7 @@ public class BookController {
 
     @GetMapping("/search")
     public Page<Book> searchBooks(
-            @RequestParam String title,
+            @RequestParam(defaultValue = "") String title,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "title") String sortBy,
