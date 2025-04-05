@@ -7,5 +7,7 @@ public enum LoanStatus {
     LATE_RETURNED,  // Livro devolvido com atraso
     FINE_PAID,      // multa paga
     LOST,           // Livro perdido
-    LOST_NO_PENALTY // Livro perdido sem penalidades ao usuario
+    LOST_NO_PENALTY, // Livro perdido sem penalidades ao usuario
+    ALL,
+    FORRETURN
 }
