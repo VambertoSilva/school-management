@@ -71,7 +71,7 @@ public class ReservationService {
         Optional<Reservation> reservationOptional = reservationRepository.findByBookIdAndStatus(bookId, ReservationStatus.PENDING);
 
         if(!reservationOptional.isPresent()){
-            throw new IllegalArgumentException("Id invalido ou reserva nao existe");
+           return;
         }
 
         Reservation reservation = reservationOptional.get();
