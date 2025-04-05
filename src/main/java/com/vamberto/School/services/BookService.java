@@ -79,6 +79,10 @@ public class BookService {
             return  bookRepository.findAll(pageable);
         }
 
+        if (filter == BookStatus.ALL && (title == null || title.trim().isEmpty())) {
+            return bookRepository.findAll(pageable);
+        }
+
 
         Page<Book> pageBook = bookRepository.findByTitleContainingIgnoreCase(title, pageable);
 

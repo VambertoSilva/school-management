@@ -23,6 +23,12 @@ public class Loan {
     @JoinColumn(nullable = false, updatable = false)
     private UUID userId;
 
+    @Column(nullable = false, updatable = false)
+    private String name;
+
+    @Column(nullable = false, updatable = false)
+    private String title;
+
     @JoinColumn(nullable = false, updatable = false)
     private UUID bookId;
 
