@@ -34,6 +34,8 @@ CREATE TABLE loan (
     id UUID PRIMARY KEY NOT NULL,
     user_id UUID REFERENCES users(id),
     book_id UUID REFERENCES book(id),
+    name VARCHAR(255),
+    title VARCHAR(255),
     loan_date TIMESTAMP,
     due_date TIMESTAMP,
     return_date TIMESTAMP,
