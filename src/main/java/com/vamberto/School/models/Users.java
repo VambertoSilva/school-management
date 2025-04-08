@@ -30,6 +30,7 @@ public class Users {
     @Column(name= "name" , length =255 , nullable = false)
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(name= "role" , length =20 , nullable = false)
     private UsersRole usersRole;
 }
