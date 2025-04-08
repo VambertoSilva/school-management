@@ -77,6 +77,7 @@ public class BookService {
         // Se eu não enviar um titulo e enviar no filtro "ALL", enviar todos os dados
         if(filter == BookStatus.ALL && title.isEmpty() ){
             return  bookRepository.findAll(pageable);
+
         }
 
         if (filter == BookStatus.ALL && (title == null || title.trim().isEmpty())) {
