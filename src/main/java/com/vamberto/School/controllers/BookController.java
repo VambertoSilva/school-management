@@ -24,6 +24,7 @@ public class BookController {
 
     private final BookService bookService;
 
+    @PreAuthorize("hasAnyRole('LIBRARIAN, DIRECTOR')")
     @PostMapping
     public ResponseEntity<Book> createBook(@RequestBody Book body){
         Book response = bookService.createBook(body);
@@ -32,6 +33,7 @@ public class BookController {
 
     }
 
+    @PreAuthorize("hasAnyRole('LIBRARIAN, DIRECTOR')")
     @PutMapping("{id}")
         public ResponseEntity<Book> update(@RequestBody Book body, @PathVariable String id){
         Book response = bookService.updateBook(id, body);
@@ -39,6 +41,7 @@ public class BookController {
         return ResponseEntity.ok(body);
     }
 
+    @PreAuthorize("hasAnyRole('LIBRARIAN, DIRECTOR')")
     @GetMapping
     public ResponseEntity <Page<Book>> bookList(Pageable pageable){
         Page<Book> list = bookService.listBook(pageable);
@@ -47,7 +50,6 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasRole('LIBRARIAN')")
     public Page<Book> searchBooks(
             @RequestParam(required = false, defaultValue = "") String title,
             @RequestParam(defaultValue = "0") int page,
@@ -68,7 +70,7 @@ public class BookController {
         return bookService.searchBooks(title, page, size, sortBy, direction, filter);
     }
 
-
+    @PreAuthorize("hasRole('LIBRARIAN')")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable String id){
 
