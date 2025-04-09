@@ -5,6 +5,7 @@ import com.vamberto.School.services.LibraryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class ClassificationController {
 
     private final LibraryService libraryService;
 
-
+    @PreAuthorize("hasAnyRole('LIBRARIAN, DIRECTOR')")
     @PostMapping
     public ResponseEntity<Classification> createClassification(@RequestBody Classification body){
 
@@ -27,6 +28,7 @@ public class ClassificationController {
 
     }
 
+    @PreAuthorize("hasAnyRole('LIBRARIAN, DIRECTOR')")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteClassification(@PathVariable String id){
 
