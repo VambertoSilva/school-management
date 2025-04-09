@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class LoanController {
 
     }
 
+    @PreAuthorize("hasAnyRole('LIBRARIAN, DIRECTOR')")
     @PatchMapping("{id}")
     public ResponseEntity<Loan> returnLoan(@PathVariable String id){
 
@@ -44,6 +46,7 @@ public class LoanController {
         return ResponseEntity.ok(reponse);
     }
 
+    @PreAuthorize("hasRole('STUDENT')")
     @GetMapping
     public ResponseEntity<Page<Loan>> listLoan(@RequestParam(defaultValue = "") String title,
                                                @RequestParam(defaultValue = "0") int page,
