@@ -1,5 +1,6 @@
 package com.vamberto.School.services;
 
+import com.vamberto.School.configs.CustomUserDetails;
 import com.vamberto.School.dtos.ReservationDTO;
 import com.vamberto.School.models.Book;
 import com.vamberto.School.models.Reservation;
@@ -8,6 +9,8 @@ import com.vamberto.School.models.enums.ReservationStatus;
 import com.vamberto.School.repositories.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,6 +28,9 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     public Reservation createReservation(ReservationDTO dto){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        UUID id = userDetails.getId();
 
         if (!usersRepository.existsById(dto.userId())) {
             throw new IllegalArgumentException("Usuario não existe");
