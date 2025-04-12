@@ -25,6 +25,7 @@ public class LoanController {
 
     private final LoanService loanService;
 
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'DIRECTOR')")
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody LoanDTO DTO){
 
@@ -37,7 +38,7 @@ public class LoanController {
 
     }
 
-    @PreAuthorize("hasAnyRole('LIBRARIAN, DIRECTOR')")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'DIRECTOR')")
     @PatchMapping("{id}")
     public ResponseEntity<Loan> returnLoan(@PathVariable String id){
 
@@ -46,7 +47,7 @@ public class LoanController {
         return ResponseEntity.ok(reponse);
     }
 
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT', 'LIBRARIAN')")
     @GetMapping
     public ResponseEntity<Page<Loan>> listLoan(@RequestParam(defaultValue = "") String title,
                                                @RequestParam(defaultValue = "0") int page,
@@ -61,6 +62,8 @@ public class LoanController {
 
     }
 
+
+    @PreAuthorize("hasAnyRole('STUDENT', 'LIBRARIAN')")
     @PutMapping("/renew/{id}")
     public ResponseEntity<Void> renewingLoan(@PathVariable String id) {
         try {
