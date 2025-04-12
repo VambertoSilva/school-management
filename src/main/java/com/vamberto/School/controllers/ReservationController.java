@@ -6,6 +6,7 @@ import com.vamberto.School.services.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'DIRECTOR','STUDENT')")
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationDTO dto){
 
@@ -32,6 +34,7 @@ public class ReservationController {
 
     }
 
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'DIRECTOR','STUDENT')")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id){
         reservationService.delete(id);
