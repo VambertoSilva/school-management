@@ -14,6 +14,7 @@ import com.vamberto.School.repositories.BookRepository;
 import com.vamberto.School.repositories.ConfigRepository;
 import com.vamberto.School.repositories.LoanRepository;
 import com.vamberto.School.repositories.UsersRepository;
+import com.vamberto.School.services.Filter.FilterLoanForUser;
 import com.vamberto.School.services.Filter.FilterPage;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
@@ -24,6 +25,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -51,6 +54,7 @@ public class LoanService {
         Optional<Config> quantityBooks = configRepository.findById("quantity_books");
         Optional<Book> optionalBook = bookRepository.findById(dto.bookId());
         Optional<Users> optionalUsers =usersRepository.findById(dto.userId());
+        System.out.println("oi");
         int valueConfig  = Integer.parseInt( quantityBooks.get().getValor());
 
 
@@ -121,8 +125,7 @@ public class LoanService {
     }
 
     public Page<Loan> listLoan(String title, int page, int size, String sortBy, String direction, LoanStatus filter){
-        //configuracao padrao
-        // return  loanRepository.findAll();
+
         Sort.Direction sortDirection;
         try {
             sortDirection = Sort.Direction.fromString(direction);
@@ -135,29 +138,29 @@ public class LoanService {
 
         // Se eu não enviar um titulo e enviar no filtro "ALL", enviar todos os dados
         if(filter == LoanStatus.ALL && title.isEmpty() ){
-            System.out.println("vai mostrar tudo");
-            return  loanRepository.findAll(pageable);
+              Page<Loan> allLoans = loanRepository.findAll(pageable);
+              return FilterLoanForUser.filter(allLoans, pageable, Loan::getUserId);
+
         }
 
             Page<Loan> pageLoan = loanRepository.findByTitleContainingIgnoreCase(title, pageable);
 
         //retorna com o filtro de texto, mas todos os status
         if(filter == LoanStatus.ALL && !title.isEmpty()) {
-            System.out.println("Com filtro:" + pageLoan);
-            return pageLoan;
+            return FilterLoanForUser.filter(pageLoan, pageable, Loan::getUserId);
         }
 
         if(filter == LoanStatus.FORRETURN) {
 
             Page<Loan> pageForReturnLoan = FilterPage.filter(pageLoan, loan -> loan.getStatus() == LoanStatus.ACTIVE || loan.getStatus() == LoanStatus.OVERDUE, pageable);
-            return pageForReturnLoan;
+            return FilterLoanForUser.filter(pageForReturnLoan, pageable, Loan::getUserId);
         }
 
 
         Page<Loan> pageFilterLoan = FilterPage.filter(pageLoan, loan -> loan.getStatus() .equals(filter), pageable);
-        System.out.println("Com filtro:" + pageFilterLoan );
 
-        return pageFilterLoan;
+
+        return FilterLoanForUser.filter(pageFilterLoan, pageable, Loan::getUserId);
     }
 
 
