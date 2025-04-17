@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/reservation")
+@RequestMapping("/school/api/reservation")
 @RequiredArgsConstructor
 public class ReservationController {
 
