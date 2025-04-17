@@ -1,6 +1,7 @@
 package com.vamberto.School.services;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 // Define que essa classe é um serviço Spring (será gerenciada como um bean)
 @Service
@@ -21,6 +23,7 @@ public class JwtService {
     // Chave secreta usada para assinar o token JWT.
     // Em produção, essa chave deve ser armazenada em um arquivo .env ou outro lugar seguro.
     private static final String SECRET_KEY = "minhaChaveSecretaSuperSegura12345678901234567890"; // deve ter pelo menos 256 bits
+    private static final Logger logger = Logger.getLogger(JwtService.class.getName());
 
     // Método que retorna a chave de assinatura convertida para o formato correto
     private Key getSignInKey() {
@@ -47,11 +50,16 @@ public class JwtService {
 
     // Extrai todas as claims do token (decodifica o JWT)
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSignInKey()) // define a chave de assinatura
-                .build()
-                .parseClaimsJws(token) // faz o parse do token JWT
-                .getBody(); // retorna o conteúdo (claims)
+
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+
+
+
     }
 
     // Gera um token JWT para um usuário, incluindo as roles como claims
@@ -80,7 +88,14 @@ public class JwtService {
 
     // Verifica se o token já expirou
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        Date expiration = extractExpiration(token);
+        boolean expired = expiration.before(new Date());
+
+        if (expired) {
+            logger.warning("Token expirado em: " + expiration);
+        }
+
+        return expired;
     }
 
     // Extrai a data de expiração do token
