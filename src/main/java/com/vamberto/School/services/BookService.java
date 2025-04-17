@@ -84,12 +84,13 @@ public class BookService {
             return bookRepository.findAll(pageable);
         }
 
-
         Page<Book> pageBook = bookRepository.findByTitleContainingIgnoreCase(title, pageable);
 
-        Page<Book> pageFilterBook = FilterPage.filter(pageBook, book -> book.getStatus().equals(filter), pageable);
+        if(filter == BookStatus.ALL){
+            return pageBook;
+        }
 
-         return pageFilterBook;
+        return FilterPage.filter(pageBook, book -> book.getStatus().equals(filter), pageable);
 
     }
 

@@ -18,13 +18,13 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/book")
+@RequestMapping("/school/api/book")
 @RequiredArgsConstructor
 public class BookController {
 
     private final BookService bookService;
 
-    @PreAuthorize("hasAnyRole('LIBRARIAN, DIRECTOR')")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'DIRECTOR')")
     @PostMapping
     public ResponseEntity<Book> createBook(@RequestBody Book body){
         Book response = bookService.createBook(body);
@@ -33,7 +33,7 @@ public class BookController {
 
     }
 
-    @PreAuthorize("hasAnyRole('LIBRARIAN, DIRECTOR')")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'DIRECTOR')")
     @PutMapping("{id}")
         public ResponseEntity<Book> update(@RequestBody Book body, @PathVariable String id){
         Book response = bookService.updateBook(id, body);
@@ -41,7 +41,7 @@ public class BookController {
         return ResponseEntity.ok(body);
     }
 
-    @PreAuthorize("hasAnyRole('LIBRARIAN, DIRECTOR')")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'DIRECTOR')")
     @GetMapping
     public ResponseEntity <Page<Book>> bookList(Pageable pageable){
         Page<Book> list = bookService.listBook(pageable);
