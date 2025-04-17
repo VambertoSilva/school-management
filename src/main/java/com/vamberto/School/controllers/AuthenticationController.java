@@ -9,6 +9,7 @@ import com.vamberto.School.models.Users;
 import com.vamberto.School.models.enums.UsersRole;
 import com.vamberto.School.repositories.UsersRepository;
 import com.vamberto.School.services.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/school/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -31,10 +32,10 @@ public class AuthenticationController {
 
     @PreAuthorize("permitAll()")
     @PostMapping("/login")
-    public AuthenticationResponse login(@RequestBody AuthenticationRequest request) {
+    public AuthenticationResponse login(@RequestBody AuthenticationRequest request, HttpServletRequest httpRequest) {
         // 1. Autentica usuário
         Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.getUsername().toLowerCase(), request.getPassword())
         );
 
         // 2. Busca detalhes do usuário (para gerar o token)
@@ -42,6 +43,13 @@ public class AuthenticationController {
 
         // 3. Gera token
         String token = jwtService.generateToken(userDetails);
+
+
+        String ipAddress = httpRequest.getHeader("X-Forwarded-For");
+        if (ipAddress == null || ipAddress.isEmpty()) {
+            ipAddress = httpRequest.getRemoteAddr();
+        }
+        System.out.println("novousarios: " + userDetails.getUsername() + "ip: " + ipAddress);
 
         // 4. Retorna token
         return new AuthenticationResponse(token);
