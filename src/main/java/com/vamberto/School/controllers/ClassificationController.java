@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/classification")
+@RequestMapping("/school/api/classification")
 @RequiredArgsConstructor
 public class ClassificationController {
 
     private final LibraryService libraryService;
 
-    @PreAuthorize("hasAnyRole('LIBRARIAN, DIRECTOR')")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'DIRECTOR')")
     @PostMapping
     public ResponseEntity<Classification> createClassification(@RequestBody Classification body){
 
@@ -28,7 +28,7 @@ public class ClassificationController {
 
     }
 
-    @PreAuthorize("hasAnyRole('LIBRARIAN, DIRECTOR')")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'DIRECTOR')")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteClassification(@PathVariable String id){
 
