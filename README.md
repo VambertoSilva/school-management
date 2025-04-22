@@ -1,5 +1,7 @@
 # 📚 Sistema Escolar (Projeto de Estudo)
 
+> ⚠️ **Este projeto ainda está em desenvolvimento.**
+
 ## 📖 Sobre o Projeto
 Este projeto esta sendo desenvolvido com o objetivo de estudar e aplicar conceitos de desenvolvimento de software, incluindo gerenciamento de usuários, integração com banco de dados, segurança, e arquitetura de aplicações com Java (Spring Boot). É uma aplicação simplificada de um sistema escolar, com funcionalidades como controle de alunos, professores, notas e biblioteca.
 
